@@ -24,6 +24,7 @@ import javax.swing.JToolBar;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.JScrollBar;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
@@ -31,6 +32,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -38,10 +40,25 @@ import java.awt.event.MouseEvent;
 
 public class GUI {
 
-	public JFrame frame;
+	private JFrame frame;
 	private JTextField link;
 	private JLabel lbleingefuegtelinnks;
-	private JTextField speicherort;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					GUI window = new GUI();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 
 	/**
 	 * Create the application.
@@ -55,7 +72,7 @@ public class GUI {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 820, 500);
+		frame.setBounds(100, 100, 820, 460);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -66,10 +83,6 @@ public class GUI {
 		lbleingefuegtelinnks = new JLabel("Links zum herunterladen:");
 		lbleingefuegtelinnks.setBounds(12, 157, 155, 30);
 		frame.getContentPane().add(lbleingefuegtelinnks);
-		
-		JLabel lblspeicherort = new JLabel("Speicherort:");
-		lblspeicherort.setBounds(12, 10, 90, 30);
-		frame.getContentPane().add(lblspeicherort);
 		
 		JButton btnlinkhinzufuegen = new JButton("Link hinzuf\u00FCgen");
 		btnlinkhinzufuegen.setBounds(12, 107, 131, 25);
@@ -85,26 +98,13 @@ public class GUI {
 				System.exit(0);
 			}
 		});
-		btnschliessen.setBounds(693, 415, 97, 25);
+		btnschliessen.setBounds(693, 383, 97, 25);
 		frame.getContentPane().add(btnschliessen);
-		
-		JButton btndurchsuchen = new JButton("Durchsuchen");
-		btndurchsuchen.setBounds(675, 13, 115, 25);
-		frame.getContentPane().add(btndurchsuchen);
-		
-		JButton btnordneroeffnen = new JButton("Ordner \u00F6ffnen");
-		btnordneroeffnen.setBounds(12, 415, 131, 25);
-		frame.getContentPane().add(btnordneroeffnen);
 		
 		link = new JTextField();
 		link.setBounds(12, 77, 778, 22);
 		frame.getContentPane().add(link);
 		link.setColumns(10);
-		
-		speicherort = new JTextField();
-		speicherort.setBounds(103, 13, 560, 25);
-		frame.getContentPane().add(speicherort);
-		speicherort.setColumns(10);
 		
 		JList list = new JList();
 		list.setBounds(12, 190, 754, 100);
@@ -129,8 +129,31 @@ public class GUI {
 		JLabel lblaktuell = new JLabel("Aktuell:");
 		lblaktuell.setBounds(12, 303, 56, 16);
 		frame.getContentPane().add(lblaktuell);
+		
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.setBounds(12, 10, 119, 26);
+		frame.getContentPane().add(menuBar);
+		
+		JMenu mnNewMenudatei = new JMenu("Datei");
+		menuBar.add(mnNewMenudatei);
+		
+		JMenuItem mntmNewMenuItemschliessen = new JMenuItem("Schlie\u00DFen");
+		mntmNewMenuItemschliessen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.exit(0);
+			}
+		});
+		
+		JMenuItem mntmNewMenuItemordnereoffnen = new JMenuItem("Ordner \u00F6ffnen ...");
+		mnNewMenudatei.add(mntmNewMenuItemordnereoffnen);
+		mnNewMenudatei.add(mntmNewMenuItemschliessen);
+		
+		JMenu mnNewMenuoptionen = new JMenu("Optionen");
+		menuBar.add(mnNewMenuoptionen);
+		
+		JMenuItem mntmNewMenuItemspeicherort = new JMenuItem("Speicherort");
+		mnNewMenuoptionen.add(mntmNewMenuItemspeicherort);
 	}
 	private static void addPopup(Component component, final JPopupMenu popup) {
 	}
 }
-
