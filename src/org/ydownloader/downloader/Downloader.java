@@ -1,4 +1,4 @@
-package org.ydownloader;
+package org.ydownloader.downloader;
 
 import java.io.File;
 

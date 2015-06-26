@@ -1,4 +1,4 @@
-package org.ydownloader.youtube;
+package org.ydownloader.downloader.youtube;
 
 import java.io.File;
 import java.net.URL;

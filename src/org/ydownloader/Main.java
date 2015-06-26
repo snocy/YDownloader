@@ -3,8 +3,8 @@ package org.ydownloader;
 import java.awt.EventQueue;
 import java.io.File;
 
+import org.ydownloader.downloader.youtube.Youtube;
 import org.ydownloader.gui.GUI;
-import org.ydownloader.youtube.Youtube;
 
 public class Main {
 	/**
