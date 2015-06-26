@@ -3,6 +3,11 @@
   <groupId>maven.1432835398420</groupId>
   <artifactId>maven.1432835398420</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+   <repositories> <repository>
+   <id>xuggle repo</id>
+   <url>http://xuggle.googlecode.com/svn/trunk/repo/share/java/</url>
+  </repository>
+  </repositories>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
@@ -17,18 +22,16 @@
     </plugins>
   </build>
   <dependencies>
-  	<dependency>
-  		<groupId>com.github.axet</groupId>
-  		<artifactId>vget</artifactId>
-	</dependency>
-  </dependencies>
-  <dependencyManagement>
-  	<dependencies>
-  		<dependency>
+   		<dependency>
   			<groupId>com.github.axet</groupId>
   			<artifactId>vget</artifactId>
   			<version>1.1.23</version>
   		</dependency>
+  		<dependency>
+			   <groupId>xuggle</groupId>
+			   <artifactId>xuggle-xuggler</artifactId>
+			   <version>5.2</version>
+  		</dependency>
   	</dependencies>
-  </dependencyManagement>
+
 </project>
