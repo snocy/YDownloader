@@ -29,9 +29,6 @@ public class Youtube {
 	                public void run() {
 	                    VideoInfo i1 = info;
 	                    DownloadInfo i2 = i1.getInfo();
-
-	                    // notify app or save download state
-	                    // you can extract information from DownloadInfo info;
 	                    switch (i1.getState()) {
 	                    case EXTRACTING:
 	                    case EXTRACTING_DONE:
@@ -69,6 +66,7 @@ public class Youtube {
 
 	                            System.out.println(String.format("%s %.2f %s", i1.getState(),
 	                                    i2.getCount() / (float) i2.getLength(), parts));
+	                            System.out.print ('\f');
 	                        }
 	                        break;
 	                    default:
@@ -107,8 +105,8 @@ public class Youtube {
 
 	            System.out.println("Title: " + info.getTitle());
 	            System.out.println("Download URL: " + info.getInfo().getSource());
-
 	            v.download(user, stop, notify);
+	            
 	        } catch (RuntimeException e) {
 	            throw e;
 	        } catch (Exception e) {
