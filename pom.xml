@@ -3,10 +3,7 @@
   <groupId>maven.1432835398420</groupId>
   <artifactId>maven.1432835398420</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-   <repositories> <repository>
-   <id>xuggle repo</id>
-   <url>http://xuggle.googlecode.com/svn/trunk/repo/share/java/</url>
-  </repository>
+   <repositories> 
   </repositories>
   <build>
     <sourceDirectory>src</sourceDirectory>
@@ -28,10 +25,16 @@
   			<version>1.1.23</version>
   		</dependency>
   		<dependency>
-			   <groupId>xuggle</groupId>
-			   <artifactId>xuggle-xuggler</artifactId>
-			   <version>5.2</version>
+			<groupId>org.apache.maven.plugins</groupId>
+  			<artifactId>maven-install-plugin</artifactId>
+  			<version>2.5.2</version>
+  			<type>maven-plugin</type>
   		</dependency>
+  		<dependency>
+      		<groupId>com.google.code</groupId>
+      		<artifactId>jave</artifactId>
+      		<version>1.0.2</version>
+ 		</dependency>
   	</dependencies>
 
 </project>
