@@ -1,13 +1,16 @@
-package org.ydownloader.youtube;
+package org.ydownloader.downloader.youtube;
 
 import java.io.File;
 import java.net.URL;
 
 import com.github.axet.vget.VGet;
+
 import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.ydownloader.Downloader;
 
 import com.github.axet.vget.info.VGetParser;
 import com.github.axet.vget.info.VideoInfo;
@@ -17,10 +20,12 @@ import com.github.axet.wget.info.DownloadInfo;
 import com.github.axet.wget.info.DownloadInfo.Part;
 import com.github.axet.wget.info.DownloadInfo.Part.States;
 
-public class Youtube {
-	    VideoInfo info;
-	    long last;
-
+public class Youtube implements Downloader {
+		protected VideoInfo info;
+	    protected File path;
+	    protected String url;
+	    protected long last;
+	    
 	    public void run(String url, File path) {
 	        try {
 	            AtomicBoolean stop = new AtomicBoolean(false);
@@ -118,5 +123,25 @@ public class Youtube {
 	public Youtube() {
 		       
 		    }
+	@Override
+	public boolean DownloadFinished() {
+		
+		return false;
+	}
+	@Override
+	public int getProgress() {
+		
+		return 0;
+	}
+	@Override
+	public File getPath() {
+		
+		return this.path;
+	}
+	@Override
+	public String getUrl() {
+		
+		return this.url;
+	}
 	}
 
