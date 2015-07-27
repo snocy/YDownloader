@@ -35,6 +35,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import org.ydownloader.convert.Konverter3;
 import org.ydownloader.downloader.youtube.Youtube;
 
 import com.thoughtworks.xstream.io.path.Path;
@@ -45,6 +46,8 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Queue;
 
 
@@ -57,6 +60,9 @@ public class GUI {
 	private DefaultListModel model;
 	private String speicherort;
 	private Youtube you=null;
+	private int downloads=0;
+	private int downloadsfertig=0;
+	private Konverter3 kv=null;
 	/**
 	 * Launch the application.
 	 */
@@ -195,9 +201,13 @@ public class GUI {
 		 class ProgressBar implements Runnable {
 		        public void run() {
 		        	while(true) try {
-		        		if(you!=null) {
-		        			progressBareinzel.setValue((int)(you.getProgress()));		
-		        		} 
+		        		if(you!=null && kv !=null) {
+		        			progressBareinzel.setValue((int)(you.getProgress()));	
+		        			progressBargesamt.setValue((int)(downloadsfertig/downloads * 100) + (int)(you.getProgress()/downloads));
+		        		} else {
+		        			progressBareinzel.setValue(0);	
+		        			progressBargesamt.setValue(0);
+		        		}
 		        			//progressBareinzel.setValue((int)(Math.random()*100));
 						Thread.sleep(250);
 					} catch (Exception e) {
@@ -222,21 +232,32 @@ public class GUI {
 	private void startDL() {
 		Queue queue = new LinkedList();
 		
-		int downloads = model.getSize();
-		for(int i=0;i<downloads;i++) {
+		int dls = model.getSize();
+		
+		
+		for(int i=0;i<dls;i++) {
 			queue.add(model.getElementAt(i).toString());
-		}		
+			
+		}	
+		model.clear();
+		downloads=queue.size();
+		downloadsfertig=0;
 			class MyDownloader implements Runnable {
 					Queue dls;
 			        MyDownloader(Queue p) { dls = p; }
 			        public void run() {
+			        	while(dls.size()!=0) {
 			        	try {
-			        		String ele = (String) dls.element();
-			        		System.out.println(dls.element() +" = PFAD =>"+ speicherort +ele.substring(ele.length() - 6)  + ".dl");
-							you = new Youtube();
-							File path = new File( speicherort + ele.substring(ele.length() - 6)   + ".dl");
-							you.run(ele, path);  
-							Konverter3 k = new Konverter3(path,speicherort + ele.length() - 6) + ".mp3")
+			        			String ele = (String) dls.element();
+			        			System.out.println(dls.element() +" = PFAD =>"+ speicherort +ele.substring(ele.length() - 6)  + ".dl");
+			        			you = new Youtube();
+			        			File path = new File( speicherort + ele.substring(ele.length() - 6)   + ".dl");
+			        			you.run(ele, path);  
+			        			kv = new Konverter3();
+			        			kv.Konvert(path,speicherort + ele.substring(ele.length() - 6)+ ".mp3");
+			        			downloadsfertig++;
+			        			dls.remove();
+			        			
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -246,7 +267,9 @@ public class GUI {
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
-						} 
+						}
+			        	}
+			        	you=null;
 			        }
 			    }
 			Thread thread1 = new Thread(new MyDownloader(queue));
