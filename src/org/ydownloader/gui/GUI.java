@@ -35,6 +35,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import org.ydownloader.convert.Konverter3;
 import org.ydownloader.downloader.youtube.Youtube;
 
 import com.thoughtworks.xstream.io.path.Path;
@@ -236,7 +237,9 @@ public class GUI {
 							you = new Youtube();
 							File path = new File( speicherort + ele.substring(ele.length() - 6)   + ".dl");
 							you.run(ele, path);  
-							Konverter3 k = new Konverter3(path,speicherort + ele.length() - 6) + ".mp3")
+							Konverter3 k = new Konverter3();
+							k.Konvert(path,speicherort + ele.substring(ele.length() - 6)+ ".mp3");
+							System.out.println("Done");
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
