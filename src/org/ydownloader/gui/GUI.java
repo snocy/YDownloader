@@ -248,6 +248,7 @@ public class GUI {
 			        public void run() {
 			        	while(dls.size()!=0) {
 			        	try {
+<<<<<<< HEAD
 			        			String ele = (String) dls.element();
 			        			System.out.println(dls.element() +" = PFAD =>"+ speicherort +ele.substring(ele.length() - 6)  + ".dl");
 			        			you = new Youtube();
@@ -258,6 +259,16 @@ public class GUI {
 			        			downloadsfertig++;
 			        			dls.remove();
 			        			
+=======
+			        		String ele = (String) dls.element();
+			        		System.out.println(dls.element() +" = PFAD =>"+ speicherort +ele.substring(ele.length() - 6)  + ".dl");
+							you = new Youtube();
+							File path = new File( speicherort + ele.substring(ele.length() - 6)   + ".dl");
+							you.run(ele, path);  
+							Konverter3 k = new Konverter3();
+							k.Konvert(path,speicherort + ele.substring(ele.length() - 6)+ ".mp3");
+							System.out.println("Done");
+>>>>>>> refs/remotes/origin/testing
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
