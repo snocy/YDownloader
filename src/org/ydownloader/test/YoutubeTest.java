@@ -1,6 +1,7 @@
 package org.ydownloader.test;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.regex.Matcher;
@@ -20,29 +21,6 @@ public class YoutubeTest {
 		new YoutubeTest();
 	}
 	public YoutubeTest() {
-	  /**
-	   * public static void main(String[] args) {
-        AppManagedDownload e = new AppManagedDownload();
-        // ex: http://www.youtube.com/watch?v=Nj6PFaDmp6c
-        String url = args[0];
-        // ex: /Users/axet/Downloads/
-        String path = args[1];
-        e.run(url, new File(path));
-    }
-	   */
-		/**
-		Youtube yDownload = new Youtube();
-		 // ex: http://www.youtube.com/watch?v=Nj6PFaDmp6c
-       String url = "https://www.youtube.com/watch?v=UZHUNKHRSXs";
-       if(validYoutube(url)) {
-    	// ex: /Users/axet/Downloads/
-           String path = "/home/benedict/Downloads/youtube/videos";
-           System.out.println("gültiger link!");
-           yDownload.run(url, new File(path));
-       } else {
-    	   System.out.println("ungültiger link!");
-       }
-       **/
 		String url = "https://www.youtube.com/watch?v=fjRcYm3g90E";
 		
 		 if(validYoutube(url)) {
@@ -70,7 +48,18 @@ public class YoutubeTest {
                 v.extract();
                 System.out.println("Title: " + info.getTitle());
                 System.out.println("Download URL: " + info.getInfo().getSource());
-                new DownloadHttps(info.getInfo().getSource(),path);
+                try {
+					DownloadHttps dl = new DownloadHttps(info.getInfo().getSource(),path);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				 
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block

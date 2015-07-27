@@ -25,6 +25,8 @@ import javax.swing.JToolBar;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollBar;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
@@ -33,9 +35,17 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import org.ydownloader.downloader.youtube.Youtube;
+
+import com.thoughtworks.xstream.io.path.Path;
+
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Queue;
 
 
 public class GUI {
@@ -43,7 +53,10 @@ public class GUI {
 	private JFrame frame;
 	private JTextField link;
 	private JLabel lbleingefuegtelinnks;
-
+	private JList list;
+	private DefaultListModel model;
+	private String speicherort;
+	private Youtube you=null;
 	/**
 	 * Launch the application.
 	 */
@@ -88,10 +101,25 @@ public class GUI {
 		btnlinkhinzufuegen.setBounds(12, 107, 131, 25);
 		frame.getContentPane().add(btnlinkhinzufuegen);
 		
+		btnlinkhinzufuegen.addActionListener(new ActionListener()
+	    {
+	        public void actionPerformed(ActionEvent e)
+	        {
+	           addListe();
+	        }
+
+	    });
 		JButton btnherunterladen = new JButton("Herunterladen");
 		btnherunterladen.setBounds(12, 383, 131, 25);
 		frame.getContentPane().add(btnherunterladen);
-		
+		btnherunterladen.addActionListener(new ActionListener()
+	    {
+	        public void actionPerformed(ActionEvent e)
+	        {
+	           startDL();
+	        }
+
+	    });
 		JButton btnschliessen = new JButton("Schlie\u00DFen");
 		btnschliessen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -105,8 +133,8 @@ public class GUI {
 		link.setBounds(12, 77, 778, 22);
 		frame.getContentPane().add(link);
 		link.setColumns(10);
-		
-		JList list = new JList();
+		 model = new DefaultListModel();
+		list = new JList(model);
 		list.setBounds(12, 190, 754, 100);
 		frame.getContentPane().add(list);
 		
@@ -152,8 +180,78 @@ public class GUI {
 		menuBar.add(mnNewMenuoptionen);
 		
 		JMenuItem mntmNewMenuItemspeicherort = new JMenuItem("Speicherort");
+		mntmNewMenuItemspeicherort.addActionListener(new ActionListener()
+	    {
+	        public void actionPerformed(ActionEvent e)
+	        {
+	        	speicherort = JOptionPane.showInputDialog(frame, "Speicherort wählen!");
+	        }
+
+	    });
+		
+		
 		mnNewMenuoptionen.add(mntmNewMenuItemspeicherort);
+		
+		 class ProgressBar implements Runnable {
+		        public void run() {
+		        	while(true) try {
+		        		if(you!=null) {
+		        			progressBareinzel.setValue((int)(you.getProgress()));		
+		        		} 
+		        			//progressBareinzel.setValue((int)(Math.random()*100));
+						Thread.sleep(250);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} 
+		        }
+		        
+		    }
+			Thread thread1 = new Thread(new ProgressBar());
+			thread1.start();
 	}
 	private static void addPopup(Component component, final JPopupMenu popup) {
+	}
+	private void addListe() {
+		int pos = list.getModel().getSize();
+		if(new Youtube().validYoutube(this.link.getText())) {
+			model.add(pos, this.link.getText());
+		}
+		link.setText("");
+	}
+	private void startDL() {
+		Queue queue = new LinkedList();
+		
+		int downloads = model.getSize();
+		for(int i=0;i<downloads;i++) {
+			queue.add(model.getElementAt(i).toString());
+		}		
+			class MyDownloader implements Runnable {
+					Queue dls;
+			        MyDownloader(Queue p) { dls = p; }
+			        public void run() {
+			        	try {
+			        		String ele = (String) dls.element();
+			        		System.out.println(dls.element() +" = PFAD =>"+ speicherort +ele.substring(ele.length() - 6)  + ".dl");
+							you = new Youtube();
+							File path = new File( speicherort + ele.substring(ele.length() - 6)   + ".dl");
+							you.run(ele, path);  
+							Konverter3 k = new Konverter3(path,speicherort + ele.length() - 6) + ".mp3")
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} 
+			        }
+			    }
+			Thread thread1 = new Thread(new MyDownloader(queue));
+			thread1.start();		
+		
+		
 	}
 }

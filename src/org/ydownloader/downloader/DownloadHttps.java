@@ -24,7 +24,9 @@ public class DownloadHttps {
 	    AtomicBoolean stop = new AtomicBoolean(false);
 	    DownloadInfo info;
 	    long last;
-	    public DownloadHttps(URL adress, String path) {
+	    private float progress=0.0f;
+	    public DownloadHttps() {}
+	    public void download(URL adress, String path) throws IOException , InterruptedException , Exception{
 	    	// Proudly stolen from http://stackoverflow.com/questions/10135074/download-file-from-https-server-using-java
 	    	// btw. thank you for that :)
 	    	// Create a new trust manager that trust all certificates
@@ -42,21 +44,13 @@ public class DownloadHttps {
 	    	    }
 	    	    
 	    	};
-	    	
-	    	// Activate the new trust manager
-	    	try {
 	    	    SSLContext sc = SSLContext.getInstance("SSL");
 	    	    sc.init(null, trustAllCerts, new java.security.SecureRandom());
 	    	    HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-	    	} catch (Exception e) {
-	    	}
-			try {
-				//url = new URL(adress);
 				URLConnection connection = adress.openConnection();
 				int nBytesReceived = 0;
 				int nTotalBytesInStream = connection.getContentLength();
 				InputStream is = connection.getInputStream();    	
-		    	//File downloadedFile = File.createTempFile(filenamePrefix, fileExtension);
 				FileOutputStream out = new FileOutputStream(path);		
 				byte[] buffer = new byte[1024];
 				int len = is.read(buffer);
@@ -64,19 +58,16 @@ public class DownloadHttps {
 				    out.write(buffer, 0, len);
 				    len = is.read(buffer);
 				    nBytesReceived += len;
-				    System.out.println( (float) ((float) nBytesReceived / (float) nTotalBytesInStream * 100));
+				     progress = (float) ((float) nBytesReceived / (float) nTotalBytesInStream * 100);
 				    if (Thread.interrupted()) {
 				        throw new InterruptedException();
 				    }
 				}
 				is.close();
 				out.close();
-
-			} catch (IOException | InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	    	
+	    }
+	    public float getProgress() {
+	    	return this.progress;
 	    }
 	}
 
