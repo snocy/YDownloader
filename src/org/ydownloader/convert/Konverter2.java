@@ -10,7 +10,7 @@ import java.io.File;
 
 public class Konverter2 {
 	
-	public Konverter2() {
+	public Konverter2()  {
 		// TODO Auto-generated constructor stub
 	}
 
