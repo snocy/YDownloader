@@ -14,6 +14,7 @@ import java.awt.FlowLayout;
 import javax.swing.JTextField;
 import javax.swing.JTable;
 
+import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.Color;
 
@@ -53,7 +54,7 @@ import java.util.Queue;
 
 public class GUI {
 
-	private JFrame frame;
+	public JFrame frame;
 	private JTextField link;
 	private JLabel lbleingefuegtelinnks;
 	private JList list;
@@ -63,20 +64,12 @@ public class GUI {
 	private int downloads=0;
 	private int downloadsfertig=0;
 	private Konverter3 kv=null;
+	public JLabel lblaktuell;
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					GUI window = new GUI();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	
 	}
 
 	/**
@@ -96,15 +89,15 @@ public class GUI {
 		frame.getContentPane().setLayout(null);
 		
 		JLabel lbllinkeinfuegen = new JLabel("Link einf\u00FCgen:");
-		lbllinkeinfuegen.setBounds(12, 49, 90, 30);
+		lbllinkeinfuegen.setBounds(12, 49, 120, 30);
 		frame.getContentPane().add(lbllinkeinfuegen);
 		
 		lbleingefuegtelinnks = new JLabel("Links zum herunterladen:");
-		lbleingefuegtelinnks.setBounds(12, 157, 155, 30);
+		lbleingefuegtelinnks.setBounds(12, 157, 200, 30);
 		frame.getContentPane().add(lbleingefuegtelinnks);
 		
 		JButton btnlinkhinzufuegen = new JButton("Link hinzuf\u00FCgen");
-		btnlinkhinzufuegen.setBounds(12, 107, 131, 25);
+		btnlinkhinzufuegen.setBounds(12, 107, 150, 25);
 		frame.getContentPane().add(btnlinkhinzufuegen);
 		
 		btnlinkhinzufuegen.addActionListener(new ActionListener()
@@ -116,7 +109,7 @@ public class GUI {
 
 	    });
 		JButton btnherunterladen = new JButton("Herunterladen");
-		btnherunterladen.setBounds(12, 383, 131, 25);
+		btnherunterladen.setBounds(12, 383, 180, 25);
 		frame.getContentPane().add(btnherunterladen);
 		btnherunterladen.addActionListener(new ActionListener()
 	    {
@@ -126,14 +119,14 @@ public class GUI {
 	        }
 
 	    });
-		JButton btnschliessen = new JButton("Schlie\u00DFen");
+		/**JButton btnschliessen = new JButton("Schlie\u00DFen");
 		btnschliessen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.exit(0);
 			}
 		});
-		btnschliessen.setBounds(693, 383, 97, 25);
-		frame.getContentPane().add(btnschliessen);
+		btnschliessen.setBounds(693, 383, 140, 25);
+		frame.getContentPane().add(btnschliessen);**/
 		
 		link = new JTextField();
 		link.setBounds(12, 77, 778, 22);
@@ -157,11 +150,11 @@ public class GUI {
 		frame.getContentPane().add(scrollBar);
 		
 		JLabel lblgesamt = new JLabel("Gesamt:");
-		lblgesamt.setBounds(12, 340, 56, 16);
+		lblgesamt.setBounds(12, 340, 90, 16);
 		frame.getContentPane().add(lblgesamt);
 		
-		JLabel lblaktuell = new JLabel("Aktuell:");
-		lblaktuell.setBounds(12, 303, 56, 16);
+		lblaktuell = new JLabel("Aktuell:");
+		lblaktuell.setBounds(12, 303, 600, 16);
 		frame.getContentPane().add(lblaktuell);
 		
 		JMenuBar menuBar = new JMenuBar();
@@ -179,6 +172,17 @@ public class GUI {
 		});
 		
 		JMenuItem mntmNewMenuItemordnereoffnen = new JMenuItem("Ordner \u00F6ffnen ...");
+		
+		mntmNewMenuItemordnereoffnen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					Desktop.getDesktop().open(new File(speicherort));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
 		mnNewMenudatei.add(mntmNewMenuItemordnereoffnen);
 		mnNewMenudatei.add(mntmNewMenuItemschliessen);
 		
@@ -201,9 +205,10 @@ public class GUI {
 		 class ProgressBar implements Runnable {
 		        public void run() {
 		        	while(true) try {
-		        		if(you!=null && kv !=null) {
+		        		if(you!=null) {
 		        			progressBareinzel.setValue((int)(you.getProgress()));	
 		        			progressBargesamt.setValue((int)(downloadsfertig/downloads * 100) + (int)(you.getProgress()/downloads));
+		        			
 		        		} else {
 		        			progressBareinzel.setValue(0);	
 		        			progressBargesamt.setValue(0);
@@ -230,6 +235,10 @@ public class GUI {
 		link.setText("");
 	}
 	private void startDL() {
+		if(speicherort==null) {
+			JOptionPane.showMessageDialog(null, "Bitte einen Speicherort unter Optionen einstellen!", "Speicherort-Warnung", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
 		Queue queue = new LinkedList();
 		
 		int dls = model.getSize();
@@ -239,6 +248,7 @@ public class GUI {
 			queue.add(model.getElementAt(i).toString());
 			
 		}	
+		
 		model.clear();
 		downloads=queue.size();
 		downloadsfertig=0;
@@ -248,16 +258,19 @@ public class GUI {
 			        public void run() {
 			        	while(dls.size()!=0) {
 			        	try {
+			        			
 			        			String ele = (String) dls.element();
 			        			System.out.println(dls.element() +" = PFAD =>"+ speicherort +ele.substring(ele.length() - 6)  + ".dl");
+			        			lblaktuell.setText("Aktuell: " + ele);
 			        			you = new Youtube();
 			        			File path = new File( speicherort + ele.substring(ele.length() - 6)   + ".dl");
 			        			you.run(ele, path);  
+			        			lblaktuell.setText("Aktuell: Konvertierung von " + ele);
 			        			kv = new Konverter3();
 			        			kv.Konvert(path,speicherort + ele.substring(ele.length() - 6)+ ".mp3");
 			        			downloadsfertig++;
 			        			dls.remove();
-			        		
+			        			lblaktuell.setText("Aktuell:");
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -270,6 +283,9 @@ public class GUI {
 						}
 			        	}
 			        	you=null;
+			        	JOptionPane.showMessageDialog(null, "Deine Downloads sind heruntergeladen!", "Downloads Fertig", JOptionPane.OK_CANCEL_OPTION);
+
+
 			        }
 			    }
 			Thread thread1 = new Thread(new MyDownloader(queue));
